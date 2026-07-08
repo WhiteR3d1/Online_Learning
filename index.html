@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>บทเรียนออนไลน์ | ออกแบบและสร้างเว็บไซต์ด้วยภาษา HTML5</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Google Font: Sarabun -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<!-- Tailwind config (ต้องอยู่หลังสคริปต์ CDN) -->
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ["Sarabun", "sans-serif"] },
+        colors: {
+          brand: {
+            50: "#eef6ff", 100: "#dbeafe", 200: "#bfdbfe",
+            300: "#93c5fd", 400: "#60a5fa", 500: "#3b82f6",
+            600: "#2563eb", 700: "#1d4ed8", 800: "#1e40af",
+          },
+          accent: { 400: "#22d3ee", 500: "#06b6d4", 600: "#0891b2" },
+        },
+        boxShadow: {
+          soft: "0 10px 30px -10px rgba(37,99,235,0.25)",
+          softlg: "0 20px 50px -15px rgba(37,99,235,0.30)",
+        },
+        borderRadius: { xl2: "1.25rem" },
+      },
+    },
+  };
+</script>
+
+<!-- CSS ภายนอก -->
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ================= LOADING OVERLAY ================= -->
+<div id="loadingOverlay" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white/70">
+  <div class="flex flex-col items-center gap-4 rounded-xl2 bg-white px-10 py-8 shadow-softlg">
+    <div class="spinner"></div>
+    <p id="loadingText" class="text-brand-700 font-semibold">กำลังประมวลผล...</p>
+  </div>
+</div>
+
+<!-- ============================================================= -->
+<!-- ===================== LOGIN SCREEN ========================== -->
+<!-- ============================================================= -->
+<section id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-2xl">
+    <div class="shine-card lift rounded-xl2 bg-white/90 border border-brand-100 shadow-softlg p-8 md:p-12 text-center">
+      <div class="flex justify-center gap-3 text-5xl mb-3">
+        <span class="float">🌐</span>
+        <span class="float" style="animation-delay:.4s">💻</span>
+        <span class="float" style="animation-delay:.8s">🎨</span>
+      </div>
+      <p class="inline-block px-4 py-1 rounded-full bg-brand-50 text-brand-700 font-semibold text-sm mb-3">บทเรียนออนไลน์</p>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 leading-snug">
+        ออกแบบและสร้างเว็บไซต์ด้วยโปรแกรมภาษา HTML5
+      </h1>
+      <div class="mt-3 flex flex-wrap justify-center gap-2 text-sm">
+        <span class="px-3 py-1 rounded-full bg-brand-600 text-white font-medium">ระดับชั้น ปวช.</span>
+        <span class="px-3 py-1 rounded-full bg-accent-500 text-white font-medium">วิชา พื้นฐานการสร้างเว็บไซต์</span>
+      </div>
+
+      <div class="mt-8 text-left max-w-md mx-auto">
+        <label class="block text-slate-600 font-semibold mb-2">👤 กรอกชื่อ – นามสกุล ของผู้เรียน</label>
+        <input id="loginName" type="text" placeholder="เช่น สมชาย ใจดี"
+          class="w-full rounded-2xl border-2 border-brand-100 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none px-5 py-3.5 text-lg transition" />
+        <button onclick="doLogin()"
+          class="lift mt-5 w-full rounded-2xl bg-gradient-to-r from-brand-600 to-accent-500 text-white font-bold text-lg py-3.5 shadow-soft hover:shadow-softlg">
+          🚀 เข้าสู่บทเรียน
+        </button>
+      </div>
+    </div>
+
+    <!-- Home Leaderboard -->
+    <div class="mt-8 rounded-xl2 bg-white/90 border border-brand-100 shadow-soft p-6 md:p-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <h2 class="text-xl font-extrabold text-slate-800">🏆 กระดานผู้นำ (Leaderboard)</h2>
+        <div class="relative">
+          <input id="lbSearch" oninput="renderLeaderboard()" type="text" placeholder="🔎 ค้นหารายชื่อ..."
+            class="rounded-2xl border-2 border-brand-100 focus:border-brand-500 outline-none pl-4 pr-4 py-2 text-sm w-full sm:w-64" />
+        </div>
+      </div>
+      <p class="text-xs text-slate-400 mb-3">เรียงลำดับตามคะแนนแบบทดสอบหลังเรียนสูงสุด • ค้นหาได้ทันทีขณะพิมพ์</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-slate-500 border-b border-brand-100">
+              <th class="py-2 px-2 text-left w-16">อันดับ</th>
+              <th class="py-2 px-2 text-left">ชื่อ – สกุล</th>
+              <th class="py-2 px-2 text-center">ก่อนเรียน</th>
+              <th class="py-2 px-2 text-center">หลังเรียน</th>
+              <th class="py-2 px-2 text-center">ระดับคุณภาพ</th>
+            </tr>
+          </thead>
+          <tbody id="lbBody">
+            <tr><td colspan="5" class="py-6 text-center text-slate-400">⏳ กำลังโหลดข้อมูล...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer class="text-center text-slate-400 text-sm mt-6">
+      © 2026 Copyright | พัฒนาโดย <span class="font-semibold text-brand-600">APINAT LADLOY</span>
+    </footer>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- ======================== MAIN APP =========================== -->
+<!-- ============================================================= -->
+<div id="appScreen" class="hidden min-h-screen">
+  <!-- Mobile top bar -->
+  <div class="md:hidden sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-brand-100 flex items-center justify-between px-4 py-3">
+    <button onclick="toggleSidebar()" class="text-2xl">☰</button>
+    <span class="font-bold text-brand-700 text-sm">บทเรียนออนไลน์ HTML5</span>
+    <span id="mobileUser" class="text-xs text-slate-500"></span>
+  </div>
+
+  <div class="flex">
+    <!-- ============ SIDEBAR (LEFT) ============ -->
+    <aside id="sidebar"
+      class="fixed md:sticky top-0 z-50 md:z-10 h-screen w-72 bg-white border-r border-brand-100 shadow-soft -translate-x-full md:translate-x-0 transition-transform duration-300 flex flex-col">
+      <div class="p-5 border-b border-brand-100">
+        <div class="flex items-center gap-2 text-3xl mb-2">🌐<span class="text-lg font-extrabold text-slate-800">HTML5 Learning</span></div>
+        <div class="rounded-2xl bg-brand-50 p-3">
+          <p class="text-xs text-slate-500">ผู้เรียน</p>
+          <p id="sideUser" class="font-bold text-brand-700 truncate">-</p>
+        </div>
+      </div>
+
+      <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+        <button data-target="home"    onclick="goto('home')"    class="nav-btn w-full text-left rounded-2xl px-4 py-3 font-semibold text-slate-600 hover:bg-brand-50 transition flex items-center gap-3">🏠 หน้าหลัก</button>
+        <button data-target="pretest" onclick="goto('pretest')" class="nav-btn w-full text-left rounded-2xl px-4 py-3 font-semibold text-slate-600 hover:bg-brand-50 transition flex items-center gap-3">📝 แบบทดสอบก่อนเรียน</button>
+        <button data-target="content" onclick="goto('content')" class="nav-btn locked w-full text-left rounded-2xl px-4 py-3 font-semibold text-slate-600 hover:bg-brand-50 transition flex items-center gap-3">📚 เนื้อหาความรู้ <span class="lock-ic ml-auto">🔒</span></button>
+        <button data-target="posttest" onclick="goto('posttest')" class="nav-btn locked w-full text-left rounded-2xl px-4 py-3 font-semibold text-slate-600 hover:bg-brand-50 transition flex items-center gap-3">✅ แบบทดสอบหลังเรียน <span class="lock-ic ml-auto">🔒</span></button>
+        <button data-target="game"    onclick="goto('game')"    class="nav-btn locked w-full text-left rounded-2xl px-4 py-3 font-semibold text-slate-600 hover:bg-brand-50 transition flex items-center gap-3">🎮 เกมโต้ตอบ <span class="lock-ic ml-auto">🔒</span></button>
+        <button data-target="result"  onclick="goto('result')"  class="nav-btn locked w-full text-left rounded-2xl px-4 py-3 font-semibold text-slate-600 hover:bg-brand-50 transition flex items-center gap-3">📊 คะแนน & พัฒนาการ <span class="lock-ic ml-auto">🔒</span></button>
+      </nav>
+
+      <div class="p-4 border-t border-brand-100">
+        <button onclick="doLogout()" class="lift w-full rounded-2xl bg-red-50 text-red-600 font-bold py-3 hover:bg-red-100 transition">🚪 ออกจากระบบ</button>
+      </div>
+    </aside>
+
+    <!-- overlay for mobile sidebar -->
+    <div id="sidebarBg" onclick="toggleSidebar()" class="hidden md:hidden fixed inset-0 z-40 bg-black/30"></div>
+
+    <!-- ============ CONTENT AREA ============ -->
+    <main class="flex-1 min-w-0">
+      <!-- Header -->
+      <header class="sticky top-0 z-20 hidden md:block bg-white/85 backdrop-blur border-b border-brand-100">
+        <div class="px-6 lg:px-10 py-4">
+          <h1 class="text-lg lg:text-xl font-extrabold text-slate-800">ออกแบบและสร้างเว็บไซต์ด้วยโปรแกรมภาษา HTML5</h1>
+          <div class="mt-1 flex flex-wrap gap-2 text-xs">
+            <span class="px-3 py-1 rounded-full bg-brand-600 text-white font-medium">ระดับชั้น ปวช.</span>
+            <span class="px-3 py-1 rounded-full bg-accent-500 text-white font-medium">วิชา พื้นฐานการสร้างเว็บไซต์</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="p-5 md:p-8 lg:p-10 max-w-5xl mx-auto">
+
+        <!-- ================= HOME ================= -->
+        <section id="sec-home" class="app-sec fade-in">
+          <div class="shine-card lift rounded-xl2 bg-white border border-brand-100 shadow-soft p-8 text-center mb-6">
+            <div class="text-6xl mb-3 float">👋</div>
+            <h2 class="text-2xl font-extrabold text-slate-800">ยินดีต้อนรับสู่บทเรียนออนไลน์</h2>
+            <p class="text-slate-500 mt-2 max-w-xl mx-auto">เรียนรู้การออกแบบและสร้างเว็บไซต์ด้วยภาษา HTML5 ผ่านเนื้อหา วิดีโอ เกม และแบบทดสอบ — เริ่มจากทำ <b class="text-brand-600">แบบทดสอบก่อนเรียน</b> ก่อนนะครับ</p>
+            <button onclick="goto('pretest')" class="lift mt-5 rounded-2xl bg-gradient-to-r from-brand-600 to-accent-500 text-white font-bold px-8 py-3 shadow-soft">📝 เริ่มทำแบบทดสอบก่อนเรียน</button>
+          </div>
+          <div class="grid sm:grid-cols-3 gap-4">
+            <div class="lift rounded-xl2 bg-white border border-brand-100 shadow-soft p-5 text-center"><div class="text-4xl">📚</div><p class="font-bold mt-2 text-slate-700">8 หัวข้อเนื้อหา</p><p class="text-xs text-slate-400">เรียนรู้แบบแท็บ</p></div>
+            <div class="lift rounded-xl2 bg-white border border-brand-100 shadow-soft p-5 text-center"><div class="text-4xl">🎮</div><p class="font-bold mt-2 text-slate-700">เกมจับคู่</p><p class="text-xs text-slate-400">สนุกและได้ความรู้</p></div>
+            <div class="lift rounded-xl2 bg-white border border-brand-100 shadow-soft p-5 text-center"><div class="text-4xl">📊</div><p class="font-bold mt-2 text-slate-700">วัดพัฒนาการ</p><p class="text-xs text-slate-400">ก่อน–หลังเรียน</p></div>
+          </div>
+        </section>
+
+        <!-- ================= PRETEST ================= -->
+        <section id="sec-pretest" class="app-sec hidden">
+          <div id="pretestIntro" class="shine-card rounded-xl2 bg-white border border-brand-100 shadow-soft p-8 text-center">
+            <div class="text-6xl mb-3">📝</div>
+            <h2 class="text-2xl font-extrabold text-slate-800">แบบทดสอบก่อนเรียน</h2>
+            <p class="text-slate-500 mt-2">จำนวน 10 ข้อ • เลือกตอบข้อละ 1 ตัวเลือก • <b class="text-red-500">มีเวลาข้อละ 20 วินาที</b> • ทำทีละข้อ</p>
+            <p class="text-amber-600 bg-amber-50 rounded-2xl px-4 py-2 mt-4 inline-block text-sm">⚠️ ต้องทำแบบทดสอบก่อนเรียนให้เสร็จ จึงจะเข้าเนื้อหาส่วนอื่นได้</p>
+            <br />
+            <button onclick="startQuiz('pre')" class="lift mt-5 rounded-2xl bg-gradient-to-r from-brand-600 to-accent-500 text-white font-bold px-8 py-3 shadow-soft">เริ่มทำแบบทดสอบ ▶</button>
+          </div>
+          <div id="pretestQuiz" class="hidden"></div>
+        </section>
+
+        <!-- ================= CONTENT ================= -->
+        <section id="sec-content" class="app-sec hidden">
+          <div class="flex flex-wrap gap-2 mb-5">
+            <button class="tab-btn active rounded-2xl px-4 py-2 text-sm font-semibold bg-white border border-brand-100 shadow-sm" onclick="showTab(1,this)">1️⃣ ความหมายเว็บไซต์</button>
+            <button class="tab-btn rounded-2xl px-4 py-2 text-sm font-semibold bg-white border border-brand-100 shadow-sm" onclick="showTab(2,this)">2️⃣ องค์ประกอบ 🎬</button>
+            <button class="tab-btn rounded-2xl px-4 py-2 text-sm font-semibold bg-white border border-brand-100 shadow-sm" onclick="showTab(3,this)">3️⃣ ประเภทเว็บไซต์</button>
+            <button class="tab-btn rounded-2xl px-4 py-2 text-sm font-semibold bg-white border border-brand-100 shadow-sm" onclick="showTab(4,this)">4️⃣ ความหมาย HTML5</button>
+            <button class="tab-btn rounded-2xl px-4 py-2 text-sm font-semibold bg-white border border-brand-100 shadow-sm" onclick="showTab(5,this)">5️⃣ หน้าที่ HTML5</button>
+            <button class="tab-btn rounded-2xl px-4 py-2 text-sm font-semibold bg-white border border-brand-100 shadow-sm" onclick="showTab(6,this)">6️⃣ โครงสร้างเว็บ</button>
+            <button class="tab-btn rounded-2xl px-4 py-2 text-sm font-semibold bg-white border border-brand-100 shadow-sm" onclick="showTab(7,this)">7️⃣ ออกแบบโครงสร้าง</button>
+            <button class="tab-btn rounded-2xl px-4 py-2 text-sm font-semibold bg-white border border-brand-100 shadow-sm" onclick="showTab(8,this)">8️⃣ จัดวางองค์ประกอบ</button>
+          </div>
+          <div id="tabWrap"></div>
+          <div class="mt-6 text-center">
+            <button onclick="goto('posttest')" class="lift rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold px-8 py-3 shadow-soft">อ่านครบแล้ว ทำแบบทดสอบหลังเรียน ✅</button>
+          </div>
+        </section>
+
+        <!-- ================= POSTTEST ================= -->
+        <section id="sec-posttest" class="app-sec hidden">
+          <div id="posttestIntro" class="shine-card rounded-xl2 bg-white border border-brand-100 shadow-soft p-8 text-center">
+            <div class="text-6xl mb-3">✅</div>
+            <h2 class="text-2xl font-extrabold text-slate-800">แบบทดสอบหลังเรียน</h2>
+            <p class="text-slate-500 mt-2">จำนวน 10 ข้อ • เลือกตอบข้อละ 1 ตัวเลือก • <b class="text-red-500">มีเวลาข้อละ 20 วินาที</b> • ทำทีละข้อ</p>
+            <button onclick="startQuiz('post')" class="lift mt-5 rounded-2xl bg-gradient-to-r from-brand-600 to-accent-500 text-white font-bold px-8 py-3 shadow-soft">เริ่มทำแบบทดสอบ ▶</button>
+          </div>
+          <div id="posttestQuiz" class="hidden"></div>
+        </section>
+
+        <!-- ================= GAME ================= -->
+        <section id="sec-game" class="app-sec hidden">
+          <div class="shine-card rounded-xl2 bg-white border border-brand-100 shadow-soft p-6 md:p-8">
+            <div class="text-center mb-5">
+              <div class="text-5xl mb-2">🎮</div>
+              <h2 class="text-2xl font-extrabold text-slate-800">เกมจับคู่แท็ก HTML5</h2>
+              <p class="text-slate-500 text-sm mt-1">คลิกเลือกการ์ด "แท็ก" ทางซ้าย แล้วจับคู่กับ "หน้าที่/ความหมาย" ทางขวาให้ถูกต้อง</p>
+              <p class="mt-2 text-brand-700 font-bold">จับคู่ได้แล้ว: <span id="gameScore">0</span> / <span id="gameTotal">0</span></p>
+            </div>
+            <div class="grid grid-cols-2 gap-4 md:gap-6">
+              <div id="gameLeft" class="space-y-3"></div>
+              <div id="gameRight" class="space-y-3"></div>
+            </div>
+            <div class="text-center mt-6">
+              <button onclick="buildGame()" class="lift rounded-2xl bg-brand-50 text-brand-700 font-bold px-6 py-2.5 hover:bg-brand-100">🔄 เริ่มเกมใหม่</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= RESULT ================= -->
+        <section id="sec-result" class="app-sec hidden">
+          <div class="shine-card rounded-xl2 bg-white border border-brand-100 shadow-soft p-6 md:p-8">
+            <div class="text-center mb-6">
+              <div class="text-5xl mb-2">📊</div>
+              <h2 class="text-2xl font-extrabold text-slate-800">ตรวจสอบคะแนนและพัฒนาการ</h2>
+            </div>
+            <div id="resultBody" class="text-center text-slate-400">ยังไม่มีข้อมูลผลคะแนน — กรุณาทำแบบทดสอบก่อนเรียนและหลังเรียนให้ครบ</div>
+          </div>
+        </section>
+
+        <footer class="text-center text-slate-400 text-sm mt-10">
+          © 2026 Copyright | พัฒนาโดย <span class="font-semibold text-brand-600">APINAT LADLOY</span>
+        </footer>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- JavaScript ภายนอก -->
+<script src="script.js"></script>
+</body>
+</html>

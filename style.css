@@ -1,0 +1,80 @@
+/* ============================================================
+   บทเรียนออนไลน์ HTML5 — สไตล์เพิ่มเติม (นอกเหนือจาก Tailwind)
+============================================================ */
+
+* { font-family: "Sarabun", sans-serif; }
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #eff6ff 0%, transparent 55%),
+    radial-gradient(1000px 500px at 110% 10%, #ecfeff 0%, transparent 50%),
+    linear-gradient(180deg, #f8fbff 0%, #f4f9ff 100%);
+  min-height: 100vh;
+}
+
+/* ===== Glassmorphism shine sweep on important text cards ===== */
+.shine-card { position: relative; overflow: hidden; }
+.shine-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -150%;
+  width: 75%; height: 100%;
+  background: linear-gradient(
+    115deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.55) 50%,
+    rgba(255,255,255,0) 100%);
+  transform: skewX(-20deg);
+  animation: shineSweep 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes shineSweep {
+  0%   { left: -150%; }
+  45%  { left: 150%; }
+  100% { left: 150%; }
+}
+
+/* Hover lift for cards/buttons */
+.lift { transition: transform .25s ease, box-shadow .25s ease; }
+.lift:hover { transform: translateY(-6px); }
+
+/* Loading overlay */
+#loadingOverlay { backdrop-filter: blur(4px); }
+.spinner {
+  width: 58px; height: 58px;
+  border: 6px solid #dbeafe;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Nav active */
+.nav-btn.active {
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  color: #fff;
+  box-shadow: 0 10px 25px -8px rgba(37,99,235,.55);
+}
+.nav-btn.locked { opacity: .5; cursor: not-allowed; }
+
+/* Tabs */
+.tab-btn.active { background: linear-gradient(135deg,#2563eb,#06b6d4); color:#fff; }
+
+/* Fade in */
+.fade-in { animation: fadeIn .45s ease; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
+
+/* Floating emoji */
+.float { animation: floaty 3.5s ease-in-out infinite; }
+@keyframes floaty { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-12px);} }
+
+/* Timer bar */
+.timer-bar { transition: width 1s linear, background-color .3s; }
+
+/* Game cards */
+.match-card { transition: all .2s ease; }
+.match-card.selected { outline: 3px solid #2563eb; transform: scale(1.03); }
+.match-card.matched { opacity:.45; pointer-events:none; background:#dcfce7 !important; border-color:#22c55e !important; }
+
+::-webkit-scrollbar { width: 10px; height:10px; }
+::-webkit-scrollbar-thumb { background:#c7d9f5; border-radius: 8px; }
