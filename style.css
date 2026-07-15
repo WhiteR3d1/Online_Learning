@@ -49,6 +49,10 @@ body {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* Role tabs (login) */
+.role-tab { color:#64748b; }
+.role-tab.active { background:#fff; color:#1d4ed8; box-shadow:0 4px 12px -4px rgba(37,99,235,.35); }
+
 /* Nav active */
 .nav-btn.active {
   background: linear-gradient(135deg, #2563eb, #06b6d4);
@@ -56,9 +60,6 @@ body {
   box-shadow: 0 10px 25px -8px rgba(37,99,235,.55);
 }
 .nav-btn.locked { opacity: .5; cursor: not-allowed; }
-
-/* Tabs */
-.tab-btn.active { background: linear-gradient(135deg,#2563eb,#06b6d4); color:#fff; }
 
 /* Fade in */
 .fade-in { animation: fadeIn .45s ease; }
@@ -75,6 +76,47 @@ body {
 .match-card { transition: all .2s ease; }
 .match-card.selected { outline: 3px solid #2563eb; transform: scale(1.03); }
 .match-card.matched { opacity:.45; pointer-events:none; background:#dcfce7 !important; border-color:#22c55e !important; }
+
+/* ===== Lesson / accordion ===== */
+.lesson-item.done .lesson-check { color:#22c55e; }
+.accordion-body { max-height:0; overflow:hidden; transition:max-height .35s ease; }
+.accordion-body.open { max-height:6000px; }
+
+/* Status badge colors */
+.st-none { background:#f1f5f9; color:#64748b; }
+.st-prog { background:#fef3c7; color:#b45309; }
+.st-done { background:#dcfce7; color:#15803d; }
+
+/* ===== Infographic: animated webpage layout ===== */
+.infographic svg { width:100%; height:auto; display:block; }
+.ig-block { animation: igPulse 2.6s ease-in-out infinite; transform-origin:center; }
+.ig-block:nth-child(2){ animation-delay:.3s; }
+.ig-block:nth-child(3){ animation-delay:.6s; }
+.ig-block:nth-child(4){ animation-delay:.9s; }
+@keyframes igPulse { 0%,100%{ opacity:.85; } 50%{ opacity:1; filter:drop-shadow(0 6px 10px rgba(37,99,235,.25)); } }
+
+/* ===== Animation media: stacking HTML tags ===== */
+.stack-anim { display:flex; flex-direction:column; gap:.5rem; }
+.stack-anim .tag-row {
+  opacity:0; transform:translateX(-14px);
+  animation: tagIn .6s ease forwards;
+  font-family: ui-monospace, monospace;
+}
+.stack-anim .tag-row:nth-child(1){ animation-delay:.1s; }
+.stack-anim .tag-row:nth-child(2){ animation-delay:.5s; }
+.stack-anim .tag-row:nth-child(3){ animation-delay:.9s; }
+.stack-anim .tag-row:nth-child(4){ animation-delay:1.3s; }
+.stack-anim .tag-row:nth-child(5){ animation-delay:1.7s; }
+@keyframes tagIn { to{ opacity:1; transform:translateX(0); } }
+
+/* Think box */
+.think-box { background:linear-gradient(135deg,#fff7ed,#fffbeb); border:1px dashed #f59e0b; }
+.career-box { background:linear-gradient(135deg,#ecfeff,#eff6ff); border:1px solid #a5f3fc; }
+
+/* Exercise option states */
+.ex-opt { transition:all .18s ease; }
+.ex-opt.correct { border-color:#22c55e !important; background:#f0fdf4 !important; }
+.ex-opt.wrong { border-color:#f87171 !important; background:#fef2f2 !important; }
 
 ::-webkit-scrollbar { width: 10px; height:10px; }
 ::-webkit-scrollbar-thumb { background:#c7d9f5; border-radius: 8px; }
