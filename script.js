@@ -8,7 +8,7 @@
 /* ============================================================
    CONFIG
 ============================================================ */
-const GAS_URL = "https://script.google.com/macros/s/AKfycbwDXf-_SA_7ThWujUe1OfXT1fE0yEIpS-y61wLvnPkdvt1EeROs-t2mx5on52-xOTecaw/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwMDmFrVKxOlm6vxteOd6eW4pvBjp-EIEnG2nYANfR4XeGxaV-kWbGaMcuYErLiJ_zt/exec";
 const YOUTUBE_EMBED = "https://www.youtube.com/embed/jj_kb6ZiPS0?rel=0";
 const ADMIN_CODE = "admin1234";   // รหัสผู้ดูแลระบบ (เปลี่ยนได้ตามต้องการ)
 

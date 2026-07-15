@@ -12,7 +12,7 @@
  *    (การอัปเดตแบบ New version จะคง URL /exec เดิมไว้)
  ************************************************************/
 
-var SHEET_ID   = "1B7bOgndN_PrS2MGw_0jvL6IKK8ofaal17bok4GZs2Vc";
+var SHEET_ID   = "1qULO7GUhC2SCdoE4GnZSKEn7Gl3ffM8C19g_YyjEzjI";
 var SHEET_NAME = "ผลการเรียน";
 
 var HEADERS = [
